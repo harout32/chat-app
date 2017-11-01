@@ -37,13 +37,23 @@ io.on('connection', (socket) => {
 
     //listening to creating messages from the client side
     socket.on('createMessage',(message, callback)=>{
+        let user = users.getUser(socket.id);
+
+        if(user && isRealString(message.text)) {
+            io.to(user.room).emit('newMessage',generateMessage(user.name,message.text));
+        }
     //to emit the the new message to all the users
-        io.emit('newMessage',generateMessage(message.from,message.text));
+        
         callback('this is from the server');
     });
     //on create location 
     socket.on('createLocationMessage',(location) => {
-        io.emit('newLocationMessage',generateLocationMessage('Admin',location.latitude,location.longitude));
+        let user = users.getUser(socket.id);
+
+        if(user) {
+            io.to(user.room).emit('newLocationMessage',generateLocationMessage(user.name,location.latitude,location.longitude));
+        }
+        
     });
 //on disconnecting
 socket.on("disconnect", ()=>{
