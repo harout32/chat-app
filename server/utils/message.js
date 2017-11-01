@@ -1,5 +1,5 @@
 let moment = require('moment');
-let generateMessage = (from, text)=> {
+let generateMessage = (from, text) => {
     return {
         from,
         text,
